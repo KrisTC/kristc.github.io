@@ -64,16 +64,26 @@
                 nextWord();
             }
         }
-        window.onfocus = function() {
-            focused = true;
-            listenForCurrentWord();
-        };
-        window.onblur = function() {
-            focused = false;
-        };
+        
+        
+        var hidden, visibilityState, visibilityChange;
+
+        if (typeof document.hidden !== "undefined") {
+            hidden = "hidden", visibilityChange = "visibilitychange", visibilityState = "visibilityState";
+        } else if (typeof document.msHidden !== "undefined") {
+            hidden = "msHidden", visibilityChange = "msvisibilitychange", visibilityState = "msVisibilityState";
+        }
+
+        var document_hidden = document[hidden];
+
+        document.addEventListener(visibilityChange, function() {
+            if (document.hasFocus()) {
+                listenForCurrentWord();
+            }
+        });
 
         function listenForCurrentWord() {
-            if (!focused) return;
+            if (!document.hasFocus()) return;
 
             const grammar = '#JSGF V1.0; grammar words; public <word> = '+readingState.currentWord+' ;';
             
