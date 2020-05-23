@@ -56,8 +56,6 @@
             console.log('++ Result received: ' + word + ' while looking for '+readingState.currentWord+'.' + '  Confidence: ' + confidence);
             if (word == readingState.currentWord && confidence > 0.7) {
                 nextWord();
-            } else {
-                listenForCurrentWord();
             }
         }
         
@@ -78,6 +76,10 @@
 
             recognition.onaudioend = function() {
                 console.log('Audio capturing ended');
+                setTimeout(listenForCurrentWord, 0);
+            }
+            recognition.onaudiostart = function() {
+                console.log('Audio capturing started');
             }
             recognition.onnomatch = function(event) {
                 diagnostic.textContent = 'I didnt recognise that.';
