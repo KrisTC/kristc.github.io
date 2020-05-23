@@ -52,7 +52,9 @@
             const last_result_index = results.length -1;
             const last_result = results[last_result_index];
             const final = last_result.isFinal;
-            const word = last_result[0].transcript.toLowerCase();
+            const transcript = last_result[0].transcript.toLowerCase();
+            const words = transcript.split(' ');
+            const word = words[0];
             const confidence = last_result[0].confidence;
             console.log('++ Result received: ' + word + ' while looking for '+readingState.currentWord+'.' + '  Confidence: ' + confidence);
             if (word == readingState.currentWord && confidence > 0.7) {
@@ -63,7 +65,7 @@
         }
         
         function listenForCurrentWord() {
-            const grammar = '#JSGF V1.0; grammar words; public <word> =  ;';
+            const grammar = '#JSGF V1.0; grammar words; public <word> = '+readingState.currentWord+' ;';
             
             const speechRecognitionList = new SpeechGrammarList();
             speechRecognitionList.addFromString(grammar, 1);
@@ -74,7 +76,7 @@
             recognition.interimResults = true;
             recognition.maxAlternatives = 1;
             //recognition.stop();
-            //recognition.grammars = speechRecognitionList;
+            recognition.grammars = speechRecognitionList;
             recognition.onresult = onWordIdentified;
 
             recognition.onaudioend = function() {
