@@ -50,11 +50,14 @@
         function onWordIdentified(event) {
             const results = event.results;
             const last_result_index = results.length -1;
-            const last_result = results[last_result_index][0];
-            const word = last_result.transcript.toLowerCase();
-            const confidence = last_result.confidence;
+            const last_result = results[last_result_index];
+            const final = last_result.isFinal;
+            const word = last_result[0].transcript.toLowerCase();
+            const confidence = last_result[0].confidence;
             console.log('++ Result received: ' + word + ' while looking for '+readingState.currentWord+'.' + '  Confidence: ' + confidence);
             if (word == readingState.currentWord && confidence > 0.7) {
+                if (!final) 
+                    event.srcElement.stop();
                 nextWord();
             }
         }
@@ -68,7 +71,7 @@
             const recognition = new SpeechRecognition();
             recognition.continuous = false;
             recognition.lang = 'en-GB'; //'en-US';
-            recognition.interimResults = false;
+            recognition.interimResults = true;
             recognition.maxAlternatives = 1;
             //recognition.stop();
             //recognition.grammars = speechRecognitionList;
