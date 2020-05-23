@@ -32,7 +32,6 @@
             readingState.allWords = $('span');
             readingState.wordCount = readingState.allWords.length;
             nextWord();
-            listenForCurrentWord();
         });
 
         function nextWord() {
@@ -46,7 +45,7 @@
             readingState.currentWord = cleanWord;
 
             readingState.allWords.eq(readingState.currentIndex).addClass('current-word');
-            //listenForCurrentWord();
+            listenForCurrentWord();
         }
         function onWordIdentified(event) {
             const results = event.results;
