@@ -6,6 +6,7 @@
         var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
         var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
         var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+        var focused = true;
 
         readingState = {
             'wordCount': 0,
@@ -63,8 +64,17 @@
                 nextWord();
             }
         }
-        
+        window.onfocus = function() {
+            focused = true;
+            listenForCurrentWord();
+        };
+        window.onblur = function() {
+            focused = false;
+        };
+
         function listenForCurrentWord() {
+            if (!focused) return;
+
             const grammar = '#JSGF V1.0; grammar words; public <word> = '+readingState.currentWord+' ;';
             
             const speechRecognitionList = new SpeechGrammarList();
