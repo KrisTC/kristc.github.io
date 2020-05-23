@@ -1,0 +1,120 @@
+<html>
+<head>
+    <title>Reader Test</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script language="JavaScript">
+        var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+        var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+        var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+
+        readingState = {
+            'wordCount': 0,
+            'currentIndex': -1,
+            'currentWord': ''
+        };
+
+        $(document).ready(function() {
+            const text = $('body').text().trim();
+            $('body').text('');
+            const lines = text.split('\n');
+            lines.forEach((line, i) => {
+                if (line.trim().length > 0 ) {
+                    const words = line.split(' ');
+                    const li = $("<li class='line'></li>");
+                    words.forEach(word => {
+                        if (word.trim().length > 0) {
+                            li.append("<span>"+word+" </span>");    
+                        }
+                    });                    
+                    $('body').append(li);
+                }
+            });
+            readingState.allWords = $('span');
+            readingState.wordCount = readingState.allWords.length;
+            nextWord();
+            listenForCurrentWord();
+        });
+
+        function nextWord() {
+            // Can't clear if nothing active
+            if (readingState.currentIndex >= 0) {
+                readingState.allWords.eq(readingState.currentIndex).removeClass('current-word');
+            }
+            const currentWord = readingState.allWords.eq(++readingState.currentIndex).text();
+            const re = RegExp(/(\w+)/g);
+            const cleanWord = re.exec(currentWord)[1].toLowerCase();
+            readingState.currentWord = cleanWord;
+
+            readingState.allWords.eq(readingState.currentIndex).addClass('current-word');
+            //listenForCurrentWord();
+        }
+        function onWordIdentified(event) {
+            const results = event.results;
+            const last_result_index = results.length -1;
+            const last_result = results[last_result_index][0];
+            const word = last_result.transcript.toLowerCase();
+            const confidence = last_result.confidence;
+            console.log('++ Result received: ' + word + ' while looking for '+readingState.currentWord+'.' + '  Confidence: ' + confidence);
+            if (word == readingState.currentWord && confidence > 0.7) {
+                nextWord();
+            }
+        }
+        
+        function listenForCurrentWord() {
+            const grammar = '#JSGF V1.0; grammar words; public <word> =  ;';
+            
+            const speechRecognitionList = new SpeechGrammarList();
+            speechRecognitionList.addFromString(grammar, 1);
+
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-GB'; //'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+            //recognition.stop();
+            //recognition.grammars = speechRecognitionList;
+            recognition.onresult = onWordIdentified;
+
+            recognition.onaudioend = function() {
+                console.log('Audio capturing ended');
+            }
+            recognition.onnomatch = function(event) {
+                diagnostic.textContent = 'I didnt recognise that.';
+            }
+
+            recognition.start();
+        }
+
+    </script>
+    <style>
+        body {
+            background-color: black;
+            color: cornflowerblue;
+            font-family: oda,comic sans ms,sans-serif;
+            font-size: x-large;
+        }
+        .current-word {
+            color: crimson;
+        }
+    </style>
+</head>
+<body>
+    <!-- https://www.freechildrenstories.com/the-great-hill -->
+Before time was time, there was a Great Hill. 
+
+And on the Great Hill there lived the Yolks.
+
+The Yolks spent their entire lives climbing the Great Hill, trying to reach the top.
+
+
+
+
+Some Yolks climbed fast.
+
+Some Yolks climbed slowly.
+
+One Yolk in particular was a very slow climber. He was different than the rest of the Yolks.
+
+
+</body>
+</html>
