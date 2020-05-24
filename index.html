@@ -14,6 +14,10 @@
             'currentWord': ''
         };
 
+        function log(msg) {
+            console.log(new Date().toUTCString() + " " + msg);
+        }
+
         $(document).ready(function() {
             const text = $('body').text().trim();
             $('body').text('');
@@ -38,7 +42,9 @@
         function nextWord() {
             // Can't clear if nothing active
             if (readingState.currentIndex >= 0) {
-                readingState.allWords.eq(readingState.currentIndex).removeClass('current-word');
+                const currentWordElm = readingState.allWords.eq(readingState.currentIndex);
+                currentWordElm.removeClass('current-word');
+                currentWordElm.addClass('read-word');
             }
             const currentWord = readingState.allWords.eq(++readingState.currentIndex).text();
             const re = RegExp(/(\w+)/g);
@@ -48,6 +54,7 @@
             readingState.allWords.eq(readingState.currentIndex).addClass('current-word');
             listenForCurrentWord();
         }
+
         function onWordIdentified(event) {
             const results = event.results;
             const last_result_index = results.length -1;
@@ -57,7 +64,7 @@
             const words = transcript.split(' ');
             const word = words[0];
             const confidence = last_result[0].confidence;
-            console.log('++ Result received: ' + word + ' while looking for '+readingState.currentWord+'.' + '  Confidence: ' + confidence);
+            log('++ Result received: ' + word + ' while looking for '+readingState.currentWord+'.' + '  Confidence: ' + confidence);
             if (word == readingState.currentWord && confidence > 0.7) {
                 if (!final) 
                     event.srcElement.stop();
@@ -85,6 +92,7 @@
         function listenForCurrentWord() {
             if (!document.hasFocus()) return;
 
+            // We can add Grammer but it doesn't seam to make any difference
             const grammar = '#JSGF V1.0; grammar words; public <word> = '+readingState.currentWord+' ;';
             
             const speechRecognitionList = new SpeechGrammarList();
@@ -100,11 +108,11 @@
             recognition.onresult = onWordIdentified;
 
             recognition.onaudioend = function() {
-                console.log('Audio capturing ended');
+                log('Audio capturing ended');
                 setTimeout(listenForCurrentWord, 0);
             }
             recognition.onaudiostart = function() {
-                console.log('Audio capturing started');
+                log('Audio capturing started');
             }
             recognition.onnomatch = function(event) {
                 diagnostic.textContent = 'I didnt recognise that.';
@@ -117,12 +125,20 @@
     <style>
         body {
             background-color: black;
-            color: cornflowerblue;
+            color: rgb(88,88,150);
             font-family: oda,comic sans ms,sans-serif;
             font-size: x-large;
         }
         .current-word {
             color: rgb(245, 66, 212);
+        }        
+        .read-word {
+            color: cornflowerblue;
+        }        
+        .heard-word {
+            color: rgb(88,150,150);
+            border-bottom-style: dashed;
+            border-bottom-width: thin;
         }
     </style>
 </head>
