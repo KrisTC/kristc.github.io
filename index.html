@@ -10,8 +10,7 @@
 
         readingState = {
             'wordCount': 0,
-            'currentIndex': -1,
-            'currentWord': ''
+            'currentWord': ''   // TODO: Kill this
         };
 
         function log(msg) {
@@ -19,8 +18,9 @@
         }
 
         $(document).ready(function() {
-            const text = $('body').text().trim();
-            $('body').text('');
+            readingState.storyBox = $('#story');
+            const text = readingState.storyBox.text().trim();
+            readingState.storyBox.text('');
             const lines = text.split('\n');
             lines.forEach((line, i) => {
                 if (line.trim().length > 0 ) {
@@ -31,28 +31,47 @@
                             li.append("<span>"+word+" </span>");    
                         }
                     });                    
-                    $('body').append(li);
+                    readingState.storyBox.append(li);
                 }
             });
-            readingState.allWords = $('span');
+            readingState.allWords = readingState.storyBox.find('span');
             readingState.wordCount = readingState.allWords.length;
             nextWord();
         });
 
         function nextWord() {
-            // Can't clear if nothing active
-            if (readingState.currentIndex >= 0) {
-                const currentWordElm = readingState.allWords.eq(readingState.currentIndex);
-                currentWordElm.removeClass('current-word');
-                currentWordElm.addClass('read-word');
-            }
-            const currentWord = readingState.allWords.eq(++readingState.currentIndex).text();
-            const re = RegExp(/(\w+)/g);
-            const cleanWord = re.exec(currentWord)[1].toLowerCase();
-            readingState.currentWord = cleanWord;
+            // We have selected our word, so lets remove all / any previewed (heard) words.
+            readingState.storyBox.find('.heard-words').removeClass('heard-words');
+            
+            // Mark current word as read
+            const currentWordElm = readingState.storyBox.find('.current-word');
+            currentWordElm.removeClass('current-word');
+            currentWordElm.addClass('read-word');
+            
+            const word = unreadWordFromIndex();
+            readingState.currentWord = word.str; // TODO: kill this
 
-            readingState.allWords.eq(readingState.currentIndex).addClass('current-word');
+            word.elem.addClass('current-word');
             listenForCurrentWord();
+        }
+
+        function unreadWordFromIndex() {
+            return unreadWordsFromIndex(1)[0];
+        }
+
+        function unreadWordsFromIndex(count) {
+            const unreadWords = readingState.storyBox.find('span:not(.read-word)');
+            
+            const selectedWordElms = unreadWords.slice(0, count);
+            const result = new Array();
+
+            const currentWordElm = selectedWordElms.each(function() {
+                const currentWord = $(this).text();
+                const re = RegExp(/(\w+)/g);
+                const cleanWord = re.exec(currentWord)[1].toLowerCase();
+                result.push({'elem': $(this), 'str': cleanWord});
+            });            
+            return result;
         }
 
         function onWordIdentified(event) {
@@ -64,11 +83,15 @@
             const words = transcript.split(' ');
             const word = words[0];
             const confidence = last_result[0].confidence;
-            log('++ Result received: ' + word + ' while looking for '+readingState.currentWord+'.' + '  Confidence: ' + confidence);
+            log('++ Result received: "' + transcript + '" while looking for '+readingState.currentWord+'.' + '  Confidence: ' + confidence);
+            
+
+            
             if (word == readingState.currentWord && confidence > 0.7) {
-                if (!final) 
+                if (!final) {
                     event.srcElement.stop();
-                nextWord();
+                    nextWord();
+                }
             }
         }
         
@@ -144,6 +167,7 @@
 </head>
 <body>
     <!-- https://www.freechildrenstories.com/the-great-hill -->
+    <div id="story">
 Before time was time, there was a Great Hill. 
 
 And on the Great Hill there lived the Yolks.
@@ -158,7 +182,7 @@ Some Yolks climbed fast.
 Some Yolks climbed slowly.
 
 One Yolk in particular was a very slow climber. He was different than the rest of the Yolks.
-
+</div>
 
 </body>
 </html>
