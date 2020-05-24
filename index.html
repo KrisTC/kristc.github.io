@@ -41,7 +41,7 @@
 
         function nextWord() {
             // We have selected our word, so lets remove all / any previewed (heard) words.
-            readingState.storyBox.find('.heard-words').removeClass('heard-words');
+            readingState.storyBox.find('.heard-word').removeClass('heard-word');
             
             // Mark current word as read
             const currentWordElm = readingState.storyBox.find('.current-word');
@@ -75,6 +75,7 @@
         }
 
         function onWordIdentified(event) {
+            // Lets work out what we heard, and sanitize it.
             const results = event.results;
             const last_result_index = results.length -1;
             const last_result = results[last_result_index];
@@ -84,9 +85,20 @@
             const word = words[0];
             const confidence = last_result[0].confidence;
             log('++ Result received: "' + transcript + '" while looking for '+readingState.currentWord+'.' + '  Confidence: ' + confidence);
-            
 
-            
+            // Words from the book (same number we think we heard spoken).
+            const pageWords = unreadWordsFromIndex(words.length);
+
+            // Word Previewing 
+            readingState.storyBox.find('.heard-word').removeClass('heard-word');
+            if (!final) {
+                words.forEach((w, i) => {
+                    if (pageWords[i].str == w) {
+                        pageWords[i].elem.addClass('heard-word');
+                    }
+                });
+            }
+
             if (word == readingState.currentWord && confidence > 0.7) {
                 if (!final) {
                     event.srcElement.stop();
@@ -159,7 +171,7 @@
             color: cornflowerblue;
         }        
         .heard-word {
-            color: rgb(88,150,150);
+            border-bottom-color: rgb(245, 66, 212);
             border-bottom-style: dashed;
             border-bottom-width: thin;
         }
