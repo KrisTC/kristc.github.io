@@ -36,22 +36,14 @@
             });
             readingState.allWords = readingState.storyBox.find('span');
             readingState.wordCount = readingState.allWords.length;
-            nextWord();
+            highlightNextWord();
         });
 
-        function nextWord() {
-            // We have selected our word, so lets remove all / any previewed (heard) words.
-            readingState.storyBox.find('.heard-word').removeClass('heard-word');
-            
-            // Mark current word as read
-            const currentWordElm = readingState.storyBox.find('.current-word');
-            currentWordElm.removeClass('current-word');
-            currentWordElm.addClass('read-word');
-            
+        function highlightNextWord() {
             const word = unreadWordFromIndex();
             readingState.currentWord = word.str; // TODO: kill this
 
-            word.elem.addClass('current-word');
+            unreadWordFromIndex().elem.addClass('current-word');
             listenForCurrentWord();
         }
 
@@ -91,19 +83,27 @@
 
             // Word Previewing 
             readingState.storyBox.find('.heard-word').removeClass('heard-word');
-            if (!final) {
+            if (final) {
+                // Clear current word
+                readingState.storyBox.find('.current-word').removeClass('current-word');
+
+                // We use a normal for loop, so we can break out, we only want to read words after a mistake
+                for (let i = 0; i < words.length; ++i) {
+                    if (pageWords[i].str == words[i]) {
+                        pageWords[i].elem.addClass('read-word');
+                    } else {
+                        break;
+                    }
+                }
+
+                highlightNextWord();
+            } else {
+                // Word Previewing, we will highlight any that match, even if not contiguous 
                 words.forEach((w, i) => {
                     if (pageWords[i].str == w) {
                         pageWords[i].elem.addClass('heard-word');
                     }
                 });
-            }
-
-            if (word == readingState.currentWord && confidence > 0.7) {
-                if (!final) {
-                    event.srcElement.stop();
-                    nextWord();
-                }
             }
         }
         
@@ -180,20 +180,22 @@
 <body>
     <!-- https://www.freechildrenstories.com/the-great-hill -->
     <div id="story">
+The Bears spent their entire lives climbing the Great Hill, trying to reach the top.
+
 Before time was time, there was a Great Hill. 
 
-And on the Great Hill there lived the Yolks.
+And on the Great Hill there lived the Bears.
 
-The Yolks spent their entire lives climbing the Great Hill, trying to reach the top.
-
-
+The Bears spent their entire lives climbing the Great Hill, trying to reach the top.
 
 
-Some Yolks climbed fast.
 
-Some Yolks climbed slowly.
 
-One Yolk in particular was a very slow climber. He was different than the rest of the Yolks.
+Some Bears climbed fast.
+
+Some Bears climbed slowly.
+
+One Yolk in particular was a very slow climber. He was different than the rest of the Bears.
 </div>
 
 </body>
