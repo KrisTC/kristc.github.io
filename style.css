@@ -1,0 +1,32 @@
+
+body {
+    background-color: black;
+    color: rgb(88,88,150);
+    font-family: oda,comic sans ms,sans-serif;
+    font-size: x-large;
+}
+.current-word {
+    color: rgb(245, 66, 212);
+}        
+.read-word {
+    color: cornflowerblue;
+}        
+.heard-word {
+    border-bottom-color: rgb(245, 66, 212);
+    border-bottom-style: dashed;
+    border-bottom-width: thin;
+}
+li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 20;
+}
+#story {
+    overflow: scroll;
+    display: block;
+    height: 50%;
+    position: absolute;
+    bottom: -0;
+    min-height: 200;
+}
