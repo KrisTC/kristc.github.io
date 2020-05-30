@@ -8,6 +8,13 @@ Once the flowers grow up you can name them and place them in a garden.
 If you don't read regularly they flowers in the garden die.
 Later you can read for other 'things you can add to your garden'.
 
+Want to give extra points for tricky words.
+
+Dictation is a nightmare so I am going add some options for if we click on the words:
+1) pronounce
+2) skip
+3) learn -- where learn will allow me to update the homophones manually for the words that the dictation struggles with.
+
 
 ---
 
