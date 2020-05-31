@@ -5,6 +5,9 @@ body {
     font-family: oda,comic sans ms,sans-serif;
     font-size: x-large;
 }
+.word {
+    cursor: hand;
+}
 .current-word {
     color: rgb(245, 66, 212);
 }        
@@ -16,7 +19,8 @@ body {
     border-bottom-style: dashed;
     border-bottom-width: thin;
 }
-li {
+
+li.line {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -30,3 +34,41 @@ li {
     bottom: -0;
     min-height: 200;
 }
+
+  .popup {
+    display: none;
+    position: absolute;
+    color: white;
+    padding: 7px;
+    border: solid 1px #ddd;
+    background: green;
+  }
+
+  ol.menu {
+    margin-block-end: 0;
+    margin-block-start: 0;
+
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    cursor: hand;
+  }
+
+  /* Toggle this class - hide and show the popup */
+  .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 0.5s;
+    animation: fadeIn 0.5s;
+  }
+  
+  /* Add animation (fade in the popup) */
+  @-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+  }
+  
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+  }

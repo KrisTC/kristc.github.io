@@ -29,19 +29,53 @@
                     const li = $("<li class='line'></li>");
                     words.forEach(word => {
                         if (word.trim().length > 0) {
-                            li.append("<span>"+word+" </span>");    
+                            li.append("<span class='word'>"+word+" </span>");    
                         }
                     });                    
                     readingState.storyBox.append(li);
                 }
             });
             highlightNextWord();
+            // Install word click menu
+            $('.word').click(onWordClick);
         });
+        function createPopupMenuItem(text, data, fn) {
+            const but = $('<li>'+text+'</li>');
+            but.click(data, function (e) { 
+                //debugger;
+                //e.data.addClass('read-word');
+                //highlightNextWord();
+                fn(e);
+                $('.popup').toggle('show');
+            });
+            return but;
+        }
+        function onWordClick(e) {
+            $('.popup').remove();
+            const popup = $('<span class="popup"></span>');
+            const ol = $('<ol class="menu"></ol>');
+            ol.append('<li>Pronounce</li>');
+            if ($(this).hasClass('current-word')) {                
+                ol.append(createPopupMenuItem('Skip', $(this), e => { 
+                    e.data.addClass('read-word');
+                    highlightNextWord();
+                }));
+                ol.append('<li>Diagnose</li>');
+            }
+            popup.append(ol);
+            popup.css({left: e.pageX});
+            popup.css({top: e.pageY});
+
+            $('body').append(popup); 
+            popup.toggle('show');
+        }
 
         function highlightNextWord() {
             const word = unreadWordFromIndex();
 
-            unreadWordFromIndex().elem.addClass('current-word');
+            const elem = unreadWordFromIndex().elem;
+            elem.addClass('current-word');
+            elem.get(0).scrollIntoView()
             listenForCurrentWord();
         }
 
