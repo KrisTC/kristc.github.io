@@ -19,9 +19,10 @@
             if (readingState.problemWords[pageWord] === undefined) {
                 readingState.problemWords[pageWord] = new Array();
             }
-            if (readingState.problemWords[pageWord].indexOf(detectedWord) === -1) {
-                readingState.problemWords[pageWord].push(detectedWord);
+            if (readingState.problemWords[pageWord][detectedWord] === undefined) {
+                readingState.problemWords[pageWord][detectedWord] = 0;
             }
+            readingState.problemWords[pageWord][detectedWord]++;
         };
 
         function log(msg) {
