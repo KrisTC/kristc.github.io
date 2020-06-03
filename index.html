@@ -12,6 +12,16 @@
         var focused = true;
 
         readingState = {
+            'problemWords': {}
+        };
+        
+        readingState.updateProblemWord = function(pageWord, detectedWord) {
+            if (readingState.problemWords[pageWord] === undefined) {
+                readingState.problemWords[pageWord] = new Array();
+            }
+            if (readingState.problemWords[pageWord].indexOf(detectedWord) === -1) {
+                readingState.problemWords[pageWord].push(detectedWord);
+            }
         };
 
         function log(msg) {
@@ -90,8 +100,8 @@
             const result = new Array();
 
             const currentWordElm = selectedWordElms.each(function() {
-                const currentWord = $(this).text();
-                const re = RegExp(/(\w+)/g);
+                const currentWord = $(this).text().replace('’', '\'');
+                const re = RegExp(/([\w]+[-']\w+|[\w]+)/g);
                 const cleanWord = re.exec(currentWord)[1].toLowerCase();
                 result.push({'elem': $(this), 'str': cleanWord});
             });            
@@ -105,14 +115,22 @@
             const last_result = results[last_result_index];
             const final = last_result.isFinal;
 
+            // We want to keep track of the # recognised words so we can skip those when trying 
+            // dictation alternitives
+            let recognisedWords = 0;
+
             for (let c = 0; c < last_result.length; ++c) {
 
                 const transcript = last_result[c].transcript.toLowerCase();
                 const words = transcript.split(' ');
                 const confidence = last_result[c].confidence;
+                // Skip recognised words for less confident dictation results.
+                words.splice(0, recognisedWords);
 
                 // Words from the book (same number we think we heard spoken).
                 const pageWords = unreadWordsFromIndex(words.length);
+                if (pageWords.length <= 0) break;
+
                 log('++ Result received: "' + transcript + '" while looking for ' + pageWords[0].str + '  Confidence: ' + confidence);
 
                 // Word Previewing 
@@ -124,7 +142,10 @@
                     for (let i = 0; i < words.length; ++i) {
                         if (homophoneSafeCompare(pageWords[i].str, words[i])) {
                             pageWords[i].elem.addClass('read-word');
+                            recognisedWords++;
                         } else {
+                            // Lets keep track of the problem words for learning
+                            readingState.updateProblemWord(pageWords[i].str, words[i]);
                             break;
                         }
                     }
@@ -200,7 +221,7 @@
 <div id="status"></div>
 <div id="story">
     <div id="chapter-1">
-        Gemma was only five minutes away from her parents’ hut, but the jungle had already taken on a different personality. It was thicker. The trees had grown taller. The ti plants shaded the green forest a sinister red. There was no doubt about it- the jungle was more dangerous here, and Gemma loved it. As a baby, Gemma’s parents had taken her on their expeditions over mountains, deserts, and vast seas. It was exciting, unpredictable, and deeply irresponsible. Now that they had settled down in the tropical rainforest, Gemma had to devise intricate plans just to sneak out for morning adventures.
+        Gemma’s was only five minutes away from her parents’ hut, but the jungle had already taken on a different personality. It was thicker. The trees had grown taller. The ti plants shaded the green forest a sinister red. There was no doubt about it- the jungle was more dangerous here, and Gemma loved it. As a baby, Gemma’s parents had taken her on their expeditions over mountains, deserts, and vast seas. It was exciting, unpredictable, and deeply irresponsible. Now that they had settled down in the tropical rainforest, Gemma had to devise intricate plans just to sneak out for morning adventures.
         
         
         
