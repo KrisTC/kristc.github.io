@@ -34,8 +34,11 @@ li.line {
     bottom: -0;
     min-height: 200;
 }
+#status {
+    cursor: hand;
+}
 
-  .popup {
+.popup {
     display: none;
     position: absolute;
     color: white;

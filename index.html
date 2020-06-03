@@ -49,6 +49,7 @@
             highlightNextWord();
             // Install word click menu
             $('.word').click(onWordClick);
+            $('#status').click(function() { listenForCurrentWord(); });
         });
         function createPopupMenuItem(text, data, fn) {
             const but = $('<li>'+text+'</li>');
