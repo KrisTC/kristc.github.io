@@ -1,6 +1,6 @@
 
 // I am keeping this simple because its not a big list and I mined it from the internet.
-let allHomophones = [["one","won"],["two","to","too"],["four","for"],["eight","ate"],["steak","stake"],["bean","been"],["pear","pair"],["bread","bred"],["cereal","serial"],["flour","flower"],["meat","meet"],["chilli","chilly"],["mussel","muscle"],["wine","whine"],["bite","byte"],["grate","great"],["berry","bury"],["currant","current"],["leek","leak"],["maize","maze"],["thyme","time"],["sauce","source"],["sweet","suite"],["mousse","moose"],["hare","hair","here","hear"],["bear","bare"],["deer","dear"],["gorilla","guerrilla"],["sole","soul"],["flea","flee"],["boar","bore"],["horse","hoarse"],["lynx","links"],["whale","wail"],["mare","mayor"],["toad","towed","toed"],["i","eye","he"],["i’ll","isle","aisle"],["you","ewe","yew"],["you’ll","yule"],["you’re","your"],["our","hour"],["they’re","their","there","the","to","it"],["theirs","there’s","their","the","there","they're","they","there's"],["we’ve","weave"],["we’d","weed"],["we’ll","wheel"],["we’re","weir"],["him","hymn"],["he’ll","heel","heal"],["he’d","heed"],["it’s","its"],["who’s","whose"],["what’s","watts"],["which","witch"],["blue","blew"],["red","read"],["greys","graze"],["son","sun"],["aunt","aren’t"],["father","farther"],["root","route"],["wood","would"],["sea","see"],["tide","tied"],["shore","sure"],["weather","whether"],["mist","missed"],["dew","due"],["reed","read"],["air","heir"],["night","knight"],["sew","sow","so"],["pause","paws","pours","pores"],["wrap","rap"],["wear","where","ware","we're","weird"],["steal","steel"],["write","right","rite"],["buy","by","bye"],["sell","cell"],["hear","here"],["break","brake"],["affect","effect"],["die","dye"],["waste","waist"],["know","no","now","know"],["accept","except"],["wait","weight"],["weigh","way","whey","sway"],["flew","flu","flue"],["threw","through"],["male","mail"],["vain","vein","vane"],["weak","week"],["whole","hole"],["bored","board"],["coarse","course"],["higher","hire"],["plain","plane"],["aloud","allowed"],["principal","principle"],["ti","tee","tea"],["hut","heart","hot","hearts","huts","hats","but","butt"],["1","one"],["2","two"],["3","three"],["4","four"],["5","five"],["6","six"],["7","seven"],["8","eight"],["9","nine"],["10","ten"],["0","zero"],["grown","growing"],["year","hear","here"],["were","where"],["thicker","already","sika","sicker","seka"],["had","have","bad","dad","add","ad"],["the","this"],["shaded","shade"],["and","a","are"],["gemma's","jenners"],["on","her","are","hairstyle","herb"],["of","was"],["milo","my"],["develop","love"],["other","early","are"],["color","colour"],["kris","chris","christopher","kristopher"],["arctic","earth","app","air"],["she'd","she"],["hopped","hoped","hot","opt"],["snow","noah's","no","so","know"],["that's","at"],["below","blow"],["high","eyeballs","i","eye","oi","hi"],["vines","veins","banes","baines","baynes","vanes"],["lemurs","limos"],["liked","like","light","lite"],["swing","string"],["jumped","jump"],["lumps","loves"],["headed","head","heard"],["chew","cheer"],["every","everyone"],["goats","goat"],["joined","join"],["planned","land","hand","band"]];
+let allHomophones = [["one","won"],["two","to","too"],["four","for"],["eight","ate"],["steak","stake"],["bean","been"],["pear","pair"],["bread","bred"],["cereal","serial"],["flour","flower"],["meat","meet"],["chilli","chilly"],["mussel","muscle"],["wine","whine"],["bite","byte"],["grate","great"],["berry","bury"],["currant","current"],["leek","leak"],["maize","maze"],["thyme","time"],["sauce","source"],["sweet","suite"],["mousse","moose"],["hare","hair","here","hear"],["bear","bare"],["deer","dear"],["gorilla","guerrilla"],["sole","soul"],["flea","flee"],["boar","bore"],["horse","hoarse"],["lynx","links"],["whale","wail"],["mare","mayor"],["toad","towed","toed"],["i","eye","he"],["i’ll","isle","aisle"],["you","ewe","yew"],["you’ll","yule"],["you’re","your"],["our","hour"],["they’re","their","there","the","to","it"],["theirs","there’s","their","the","there","they're","they","there's"],["we’ve","weave"],["we’d","weed"],["we’ll","wheel"],["we’re","weir"],["him","hymn"],["he’ll","heel","heal"],["he’d","heed"],["it’s","its"],["who’s","whose"],["what’s","watts"],["which","witch"],["blue","blew"],["red","read"],["greys","graze"],["son","sun"],["aunt","aren’t"],["father","farther"],["root","route"],["wood","would"],["sea","see"],["tide","tied"],["shore","sure"],["weather","whether"],["mist","missed"],["dew","due"],["reed","read"],["air","heir"],["night","knight"],["sew","sow","so"],["pause","paws","pours","pores"],["wrap","rap"],["wear","where","ware","we're","weird","well","when"],["steal","steel"],["write","right","rite"],["buy","by","bye"],["sell","cell"],["hear","here"],["break","brake"],["affect","effect"],["die","dye"],["waste","waist"],["know","no","now","know"],["accept","except"],["wait","weight"],["weigh","way","whey","sway"],["flew","flu","flue"],["threw","through"],["male","mail"],["vain","vein","vane"],["weak","week"],["whole","hole"],["bored","board"],["coarse","course"],["higher","hire"],["plain","plane"],["aloud","allowed"],["principal","principle"],["ti","tee","tea"],["hut","heart","hot","hearts","huts","hats","but","butt"],["1","one"],["2","two"],["3","three"],["4","four"],["5","five"],["6","six"],["7","seven"],["8","eight"],["9","nine"],["10","ten"],["0","zero"],["grown","growing"],["year","hear","here"],["were","where"],["thicker","already","sika","sicker","seka"],["had","have","bad","dad","add","ad"],["the","this"],["shaded","shade"],["and","a","are"],["gemma's","jenners"],["on","her","are","hairstyle","herb"],["of","was"],["milo","my"],["develop","love"],["other","early","are"],["color","colour"],["kris","chris","christopher","kristopher"],["arctic","earth","app","air"],["she'd","she","should","she","jihad","cheat","eat","heat","sheet","sweet","shide","sheed","eb","hebe","he'd","weed"],["hopped","hoped","hot","opt"],["snow","noah's","no","so","know"],["that's","at"],["below","blow"],["high","eyeballs","i","eye","oi","hi"],["vines","veins","banes","baines","baynes","vanes"],["lemurs","limos"],["liked","like","light","lite"],["swing","string"],["jumped","jump"],["lumps","loves"],["headed","head","heard"],["chew","cheer"],["every","everyone"],["goats","goat"],["joined","join"],["planned","land","hand","band"]];
 
 function homophoneSafeCompare(a, b) {
     // Start simple
@@ -52,3 +52,28 @@ function addProblemWords(problemWords) {
         });
     });
 }
+
+addProblemWords(
+    {
+      "where": {
+        "well": 1,
+        "when": 2
+      },
+      "she'd": {
+        "should": 3,
+        "she": 5,
+        "jihad": 1,
+        "cheat": 2,
+        "eat": 1,
+        "heat": 1,
+        "sheet": 3,
+        "sweet": 2,
+        "shide": 2,
+        "sheed": 1,
+        "eb": 1,
+        "hebe": 1,
+        "he'd": 1,
+        "weed": 1
+      }
+    }
+    );
