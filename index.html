@@ -24,6 +24,15 @@
             }
             readingState.problemWords[pageWord][detectedWord]++;
         };
+        
+        function getProblemWordsForHomophones() {
+            console.log("## Review the words, delete any that don't look like reasonable homophones");
+            console.log(
+            'addProblemWords(\n' +
+            JSON.stringify(readingState.problemWords, null, 2) + 
+            '\n);'
+            );
+        }
 
         function log(msg) {
             console.log(new Date().toUTCString() + " " + msg);
