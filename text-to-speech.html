@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text to Speech App</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
         .container { max-width: 600px; margin: auto; }
@@ -14,14 +13,36 @@
 </head>
 <body>
 <div class="container">
-    <h1>Text to Speech Converter</h1>
-    <input type="text" id="apiToken" placeholder="Enter OpenAI API Token" />
-    <input type="file" id="fileInput" />
-    <button id="convertBtn">Convert to Speech and Download</button>
-    <!-- <audio controls id="audioPlayer"></audio> -->
-</div>
+    <form id="myForm">
+        <h1>Text to Speech Converter</h1>
+        <div style="position: relative;">
+            <input type="text" id="apiToken" placeholder="Enter OpenAI API Token" />
+            <input type="file" id="fileInput" />
+            <button id="convertBtn">Convert to Speech and Download</button>
 
+            <!-- Spinner -->
+            <div id="spinner" style="display: none; position: absolute; top: 0; left: 0; width: 100px; height: 100px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                    <circle cx="50" cy="50" fill="none" stroke="#49d1e0" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
+                        <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
+                    </circle>
+                </svg>
+            </div>
+
+            <!-- Error message -->
+            <div id="error" style="display: none; position: absolute; top: 0; left: 0; background-color: #f8d7da; color: #721c24; padding: 10px; margin: 10px 0; border: 1px solid #f5c6cb; border-radius: 4px;">
+                <span id="errorMessage"></span>
+                <button style="float: right; background-color: transparent; border: none; font-size: 16px; line-height: 1; color: #721c24;" onclick="this.parentElement.style.display='none'">&times;</button>
+            </div>
+        </div>
+        <!-- <audio controls id="audioPlayer"></audio> -->
+    </form>
+
+</div>
 <script>
+    document.getElementById('myForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent the form from submitting
+    });
     // Assuming apiToken is an id of an input field
     document.addEventListener('DOMContentLoaded', (event) => {
         const apiTokenField = document.getElementById('apiToken');
@@ -38,46 +59,76 @@
         });
     });
 
-    document.getElementById('convertBtn').addEventListener('click', function() {
-        const apiToken = document.getElementById('apiToken').value;
-        const fileInput = document.getElementById('fileInput');
-        if(fileInput.files.length === 0) {
-            alert('Please select a file.');
-            return;
-        }
+    document.getElementById('convertBtn').addEventListener('click', async function() {
+    const apiToken = document.getElementById('apiToken').value;
+    const fileInput = document.getElementById('fileInput');
+    if(fileInput.files.length === 0) {
+        alert('Please select a file.');
+        return;
+    }
 
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const textContent = event.target.result;
-            const savedApiToken = localStorage.getItem('apiToken');
-            const filename = fileInput.files[0].name;
+    const form = document.getElementById('myForm'); // Replace with your form's id
+    const spinner = document.getElementById('spinner'); // Replace with your spinner's id
+    const errorDiv = document.getElementById('error'); // Replace with your error div's id
 
+    const reader = new FileReader();
+    reader.onload = async function(event) {
+        form.disabled = true;
+        spinner.style.display = 'block';
+
+        const textContent = event.target.result;
+        const savedApiToken = localStorage.getItem('apiToken');
+        const filename = fileInput.files[0].name;
+
+        try {
             // Make the API request
-            axios.post('https://api.openai.com/v1/audio/speech', {
-                model: "tts-1",
-                input: textContent,
-                voice: "onyx"
-            }, {
-                headers: { 'Authorization': `Bearer ${savedApiToken}` },
-                responseType: 'blob' // Tell axios to treat the response as a Blob
-            })
-            .then(response => {
-                // Save the audio file
-                const url = window.URL.createObjectURL(new Blob([response.data]));
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = filename.split('.').slice(0, -1).join('.') + '.mp3';;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
+            const response = await fetch('https://api.openai.com/v1/audio/speech', {
+                method: 'POST',
+                headers: { 
+                    'Authorization': `Bearer ${savedApiToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: "tts-1-hd",
+                    input: textContent,
+                    voice: "onyx"
+                })
             });
-        };
-        reader.readAsText(fileInput.files[0]);
+
+            if (!response.ok) {
+                const responseBody = await response.json();
+                throw new Error(`HTTP error! status: ${response.status}, message: ${responseBody.error.message}`);
+            }
+
+            const blob = await response.blob();
+
+            // Save the audio file
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = filename.split('.').slice(0, -1).join('.') + '.mp3';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error:', error);
+            const errorMessageSpan = errorDiv.querySelector('span');
+            errorMessageSpan.textContent = error.message;
+            errorDiv.style.display = 'block';
+        } finally {
+            form.disabled = false;
+            spinner.style.display = 'none';
+        }
+    };
+
+    reader.readAsText(fileInput.files[0]);
+
+    // Allow the user to dismiss the error message
+    errorDiv.addEventListener('click', function() {
+        errorDiv.style.display = 'none';
     });
+});
 </script>
 </body>
 </html>
